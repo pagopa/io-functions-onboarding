@@ -12,8 +12,8 @@
 import { AzureFunction, Context } from "@azure/functions";
 import * as U from "../commons/verify-utils/utils";
 
-const verifyAttachments = () =>
-  U.verifyAllAttachments.map(
+const verifyAttachments = (context: Context) =>
+  U.verifyAllAttachments(context).map(
     taskEmails => taskEmails.run()
     // only for showing results about data
     // tslint:disable-next-line: no-console
@@ -22,15 +22,15 @@ const verifyAttachments = () =>
     //.catch(e => console.log(e));
   );
 
-async function Main(): Promise<void> {
-  await verifyAttachments().run();
+async function Main(context: Context): Promise<void> {
+  await verifyAttachments(context).run();
 }
 
 const verifyAttachmentsActivity: AzureFunction = async (
   context: Context
 ): Promise<void> => {
   context.log("start activity");
-  return await Main();
+  return await Main(context);
 };
 
 export default verifyAttachmentsActivity;
