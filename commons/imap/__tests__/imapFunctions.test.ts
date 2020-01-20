@@ -54,7 +54,7 @@ const connectMock = jest.fn((options: ImapSimpleModule.ImapSimpleOptions) => {
 });
 
 describe("Connect to imap server read INBOX UNSEEN messages and extract attachments", () => {
-  it("should connect to an imap server with the right credentials", async () => {
+  it("it should connect to an imap server with the right credentials", async () => {
     const imapFunc = await ImapFunctions.imap(connectMock, imapOptions).run();
     expect(imapFunc.isRight()).toBeTruthy();
   });
