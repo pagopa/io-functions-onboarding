@@ -19,12 +19,11 @@ export const imapOption: Imap.ImapSimpleOptions = {
 };
 
 // tslint:disable-next-line: readonly-array
-export const searchCriteria: string[] = ["UNSEEN"];
+export const searchCriteria: string[] = ["UNSEEN"]; // ["ALL"]
 
 export const fetchOptions: FetchOptions = {
   bodies: ["HEADER", "TEXT"],
-  //markSeen: false,
-  markSeen: true,
+  markSeen: true, // false,
   struct: true
 };
 

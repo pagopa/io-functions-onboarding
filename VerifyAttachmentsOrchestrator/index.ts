@@ -10,18 +10,10 @@
  */
 
 import * as df from "durable-functions";
-import * as moment from "moment";
 
 // tslint:disable-next-line: typedef
 const orchestrator = df.orchestrator(function*(context) {
   return yield context.df.callActivity("VerifyAttachmentsActivity");
-
-  // sleep for one hour between cleanups
-  //const nextCleanup = moment.utc(context.df.currentUtcDateTime).add(3, "m");
-  //yield context.df.createTimer(nextCleanup.toDate());
-
-  //context.log("start ... and run");
-  //context.df.continueAsNew(undefined);
 });
 
 export default orchestrator;
