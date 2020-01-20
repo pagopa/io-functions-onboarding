@@ -1,8 +1,8 @@
+import { Context } from "@azure/functions";
 import { task } from "fp-ts/lib/Task";
 import { taskEither } from "fp-ts/lib/TaskEither";
 import { emailAttachmentsWithStatusMock } from "../../../__mocks__/mocks";
 import * as U from "../utils";
-import { Context } from "@azure/functions";
 
 jest.mock("../utils", () => {
   const originalIndex = jest.requireActual("../utils");

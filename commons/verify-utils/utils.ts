@@ -1,3 +1,4 @@
+import { Context } from "@azure/functions";
 import { array } from "fp-ts/lib/Array";
 import { task, Task } from "fp-ts/lib/Task";
 import { taskEither, TaskEither } from "fp-ts/lib/TaskEither";
@@ -6,7 +7,6 @@ import { fetchOptions, imapOption, searchCriteria } from "../domain/data";
 import { IEmailAttachmentStatus } from "../domain/models";
 import * as ImapFunctions from "../imap/imapFunctions";
 import * as ArubaVerify from "../verify-sign/wsaruba";
-import { Context } from "@azure/functions";
 
 // TODO move to some utils
 // used to create an IEmailAttachmentStatus with

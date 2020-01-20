@@ -17,9 +17,9 @@ const verifyAttachments = (context: Context) =>
     taskEmails => taskEmails.run()
     // only for showing results about data
     // tslint:disable-next-line: no-console
-    //.then(emails => emails)
+    // .then(emails => emails)
     // tslint:disable-next-line: no-console
-    //.catch(e => console.log(e));
+    // .catch(e => console.log(e));
   );
 
 async function Main(context: Context): Promise<void> {
