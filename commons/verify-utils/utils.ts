@@ -6,6 +6,7 @@ import { fetchOptions, imapOption, searchCriteria } from "../domain/data";
 import { IEmailAttachmentStatus } from "../domain/models";
 import * as ImapFunctions from "../imap/imapFunctions";
 import * as ArubaVerify from "../verify-sign/wsaruba";
+import { Context } from "@azure/functions";
 
 // TODO move to some utils
 // used to create an IEmailAttachmentStatus with
@@ -35,34 +36,41 @@ const mergeSameEmails = (emails: readonly IEmailAttachmentStatus[]) => {
 
 // Algorithm for connecting to imap server query for messages
 // download attachments and verify signatures.
-export const verifyAllAttachments: TaskEither<
+export const verifyAllAttachments = (
+  context: Context
+): TaskEither<
   Error,
   Task<readonly IEmailAttachmentStatus[]>
   // Connect to imap server
-> = ImapFunctions.imap(Imap.connect, imapOption).chain(imap =>
-  // Open inbox
-  ImapFunctions.openInbox(imap)
-    // get all emails
-    .chain(() => ImapFunctions.searchMails(imap, searchCriteria, fetchOptions))
-    // get all attachments in parallel
-    .map(messages =>
-      array.sequence(taskEither)(ImapFunctions.getAttachments(imap, messages))
-    )
-    .chain(tasks => tasks)
-    // verify all attachments
-    .map(attachments =>
-      array
-        .sequence(task)(
-          attachments.map(attachment => {
-            return ArubaVerify.verify(attachment);
+> =>
+  ImapFunctions.imap(Imap.connect, imapOption).chain(imap =>
+    // Open inbox
+    ImapFunctions.openInbox(imap)
+      // get all emails
+      .chain(() =>
+        ImapFunctions.searchMails(imap, searchCriteria, fetchOptions)
+      )
+      // get all attachments in parallel
+      .map(messages =>
+        array.sequence(taskEither)(ImapFunctions.getAttachments(imap, messages))
+      )
+      .chain(tasks => tasks)
+      // verify all attachments
+      .map(attachments =>
+        array
+          .sequence(task)(
+            attachments.map(attachment => {
+              return ArubaVerify.verify(attachment);
+            })
+          )
+          // merge emails with same id and concat attachments and status
+          .map(emailsStatus => {
+            // close imap server
+            imap.end();
+            // TODO deepen into log here seems not to work.
+            context.log(emailsStatus);
+            // merge mails with same id resembling email + attachments
+            return mergeSameEmails(emailsStatus);
           })
-        )
-        // merge emails with same id and concat attachments and status
-        .map(emailsStatus => {
-          // close imap server
-          imap.end();
-          // merge mails with same id resembling email + attachments
-          return mergeSameEmails(emailsStatus);
-        })
-    )
-);
+      )
+  );
