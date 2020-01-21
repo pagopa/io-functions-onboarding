@@ -1,49 +1,826 @@
-swagger: "2.0"
+openapi: "3.0.0"
 info:
-  version: 1.1.0
-  title: IO Function API
+  title: "IO onboarding PA API"
+  x-summary: >-
+    Public Administriations onboarding APIs for the IO project.
+  description: |-
+    The backend used by the onboarding portal for public administrations of the IO project.
+
+    The website for the project is [io-website].
+    Privacy Policy is [privacy].
+
+    Development happens on github.
+
+
+    [//]:  # (Riferimenti e url)
+    [io-website]: https://io.italia.it
+    [tos]: https://io.italia.it/note-legali/
+    [privacy]: https://io.italia.it/privacy-policy/
+
+  version: "0.0.1"
+  x-project: io
+  x-api-id: 49b844f5-2b1a-47a9-880a-ca480dac3736
   contact:
-    name: IO team
-    url: https://forum.italia.it/c/progetto-io
-  x-logo:
-    url: https://io.italia.it/assets/img/io-logo-blue.svg
-  description: >
-    Documentation of the IO Function API here.
-host: api.cd.italia.it
-basePath: "/template"
-schemes:
-  - https
+    url: https://io.italia.it
+    email: teamdigitale@governo.it
+  termsOfService: https://io.italia.it/note-legali/
+externalDocs:
+  url: https://io.italia.it
+  description: IO Project website
+servers:
+  - url: https://api.pa-onboarding.dev.io.italia.it/
+    description: Development environment
+  - url: https://api.pa-onboarding.io.italia.it/
+    description: Production environment
+x-commons:
+  # This section contains yaml anchors useful to implement common behaviors
+  #  in the OAS.
+  common-responses: &common-responses
+    "400":
+      $ref: "#/components/responses/400BadRequest"
+    "401":
+      $ref: "#/components/responses/401Unauthorized"
+    "429":
+      $ref: "#/components/responses/429TooManyRequests"
+    "500":
+      $ref: "#/components/responses/500InternalServerError"
+    "503":
+      $ref: "#/components/responses/503ServiceUnavailable"
+  non-empty-string: &non-empty-string
+    type: string
+    minLength: 1
+  problem+json-content: &problem+json-content
+    content:
+      application/problem+json:
+        schema:
+          $ref: "https://teamdigitale.github.io/openapi/0.0.5/definitions.yaml#/schemas/Problem"
 paths:
-  "/echo/{input}":
-    parameters:
-      - name: input
-        in: path
-        type: string
-        required: true
-        description: test input.
+  /login:
     get:
-      operationId: echo
-      summary: Echo API
-      description: Some API description here.
-      responses:
-        "200":
-          description: Found.
+      description: Redirects the user to the login page of the chosen SPID IdP.
+      operationId: loginWithSpid
+      parameters:
+        - name: entity_id
+          in: query
+          required: true
+          description: |-
+            **IdP ID**.
+            The id of the SPID IdP to perform the login through.
+            *Note: Also a fake IdP with id `xx_tedsstenv2` is available.*
           schema:
-            "$ref": "#/definitions/Input"
-          examples:
+            type: string
+            x-extensible-enum: ["lepidaid", "infocertid", "sielteid", "namirialid", "timid", "arubaid", "posteid", "intesaid", "spiditalia", "xx_testenv2"]
+          example: posteid
+        - name: auth_level
+          in: query
+          required: true
+          description: "**SPID level**. The security level of SPID authentication."
+          schema:
+            type: string
+            x-extensible-enum: ["SpidL2", "SpidL3"]
+          example: SpidL2
+      responses:
+        "302":
+          description: Redirection to the login page from the chosen IdP.
+  /logout:
+    post:
+      description: Logs the user out
+      operationId: logout
+      security:
+        - bearerAuth: []
+      responses:
+        <<: *common-responses
+        "204":
+          description: No content
+  /organizations:
+    get:
+      description: |-
+        Returns a list of all the organizations according to the user role. That is:
+        - for an administrator, returns a list with all the organizations
+        - for a delegate, returns a list with the single organization by which the user has been delegated
+        - for a legal representative, returns a list with the single organization which the user represents
+        - for a developer returns a forbidden error
+      operationId: getOrganizations
+      security:
+        - bearerAuth: []
+      responses:
+        <<: *common-responses
+        "200":
+          description: The organizations related to the user
+          content:
             application/json:
-              id: "10000AAAA"
-              output: "hello world !"
-        "401":
-          description: Unauthorized
+              schema:
+                $ref: "#/components/schemas/OrganizationCollection"
+        "403":
+          $ref: "#/components/responses/403Forbidden"
+    post:
+      description: |-
+        Creates a request for the onboarding of an administration and returns it in the payload of a successful response
+      operationId: createOrganizations
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganizationRegistrationParams"
+      responses:
+        <<: *common-responses
+        "201":
+          description: The request payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Request"
+        "403":
+          $ref: "#/components/responses/403Forbidden"
         "404":
-          description: Not found.
-      parameters: []
-definitions:
-  Input:
-    type: object
-    properties:
-      id:
-        type: string
-      output:
-        type: string
+          $ref: "#/components/responses/404NotFound"
+        "409":
+          $ref: "#/components/responses/409Conflict"
+
+  /requests/actions:
+    post:
+      description: Performs an action on one or more requests
+      operationId: doActionOnRequests
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: a payload specifying the action to be performed and the requests on which the action will be performed
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ActionPayload"
+      responses:
+        <<: *common-responses
+        "204":
+          description: No content
+        "403":
+          $ref: "#/components/responses/403Forbidden"
+        "404":
+          $ref: "#/components/responses/404NotFound"
+        "409":
+          $ref: "#/components/responses/409Conflict"
+  /organizations/{ipaCode}/documents/{documentName}:
+    get:
+      description: Returns the requested document
+      operationId: getDocument
+      security:
+        - bearerAuth: []
+        - tokenQueryAuth: []
+      parameters:
+        - name: ipaCode
+          in: path
+          required: true
+          description: The IPA code of the organization the document belongs to
+          schema:
+            <<: *non-empty-string
+        - name: documentName
+          in: path
+          required: true
+          description: The file name of the requested document
+          schema:
+            <<: *non-empty-string
+      responses:
+        <<: *common-responses
+        "200":
+          description: The document
+          content:
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/BinaryFile'
+        "403":
+          $ref: "#/components/responses/403Forbidden"
+        "404":
+          $ref: "#/components/responses/404NotFound"
+  /profile:
+    get:
+      description: |-
+        Returns the user profile information.
+      operationId: getProfile
+      security:
+        - bearerAuth: []
+      responses:
+        <<: *common-responses
+        "200":
+          description: The user profile information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+    put:
+      description: |-
+        Updates the user profile.
+      operationId: updateProfile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserProfile"
+      responses:
+        <<: *common-responses
+        "200":
+          description: The updated user profile information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "404":
+          $ref: "#/components/responses/404NotFound"
+  /public-administrations:
+    get:
+      description: |-
+        Returns a list of public administrations that match the searching words,
+        its items are ordered by name and their amount could be limited.
+      operationId: searchPublicAdministrations
+      parameters:
+        - name: search
+          in: query
+          required: true
+          description: |
+            **Public administration name**.
+            The API responds with a list of results that match the searching words.
+          schema:
+            $ref: "#/components/schemas/AdministrationSearchParam"
+      responses:
+        <<: *common-responses
+        "200":
+          description: |-
+            Public Administrations matching the search criteria.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdministrationSearchResult'
+components:
+  responses:
+    400BadRequest:
+      $ref: https://teamdigitale.github.io/openapi/0.0.5/definitions.yaml#/responses/400BadRequest
+    401Unauthorized:
+      description: Unauthorized
+      <<: *problem+json-content
+    403Forbidden:
+      description: Forbidden
+      <<: *problem+json-content
+    404NotFound:
+      $ref: https://teamdigitale.github.io/openapi/0.0.5/definitions.yaml#/responses/404NotFound
+    409Conflict:
+      description: Conflict
+      <<: *problem+json-content
+    429TooManyRequests:
+      $ref: https://teamdigitale.github.io/openapi/0.0.5/definitions.yaml#/responses/429TooManyRequests
+    500InternalServerError:
+      description: Internal Server Error
+      <<: *problem+json-content
+    503ServiceUnavailable:
+      $ref: https://teamdigitale.github.io/openapi/0.0.5/definitions.yaml#/responses/503ServiceUnavailable
+  schemas:
+    BinaryFile:
+      type: string
+      format: binary
+    EmailAddress:
+      type: string
+      format: email
+    FiscalCode:
+      type: string
+      description: |-
+        User's fiscal code.
+        Its format is defined by the [`FiscalCode`](https://teamdigitale.github.io/io-ts-commons/modules/_strings_.html#fiscalcode)
+        constant in [italia-ts-commons](https://teamdigitale.github.io/io-ts-commons) library.
+
+        *NOTE: for historical reasons the labels using this schema are not aligned
+        with the nomenclature defined by the [national ontologies](https://w3id.org/italia).
+        They will be replaced with the correct label
+        of [`tax_code`](https://ontopia-lodview.prod.pdnd.italia.it/onto/CPV/taxCode) at some point in time.*
+      format: FiscalCode
+      x-import: italia-ts-commons/lib/strings
+      example: SPNDNL80R13C555X
+    OrganizationFiscalCode:
+      type: string
+      description: |-
+        Organization's fiscal code.
+        Its format is defined by the [`OrganizationFiscalCode`](https://teamdigitale.github.io/io-ts-commons/modules/_strings_.html#organizationfiscalcode)
+        constant in [italia-ts-commons](https://teamdigitale.github.io/io-ts-commons) library.
+
+        *NOTE: for historical reasons the labels using this schema are not aligned
+        with the nomenclature defined by the [national ontologies](https://w3id.org/italia).
+        They will be replaced with the correct label
+        of [`tax_code`](https://ontopia-lodview.prod.pdnd.italia.it/onto/COV/taxCode) at some point in time.*
+      format: OrganizationFiscalCode
+      x-import: italia-ts-commons/lib/strings
+      example: 01234567890
+    OrganizationScope:
+      type: string
+      x-extensible-enum:
+        - "LOCAL"
+        - "NATIONAL"
+    RequestStatus:
+      description: |-
+        An enumerator of available statuses for a request.
+        Two different statuses of `CREATED` and `SUBMITTED` are available in order to map
+        the different steps for an organization registration and a user delegation, respectively:
+        1. the user creates the request with its related document
+        2. the user sends the document to the legal representative
+      type: string
+      x-extensible-enum:
+        - "CREATED" #document creation
+        - "SUBMITTED" #document send
+        - "ACCEPTED"
+        - "REJECTED"
+        - "FAILED"
+    RequestType:
+      type: string
+      x-extensible-enum:
+        - "ORGANIZATION_REGISTRATION"
+        - "USER_DELEGATION"
+    UserRole:
+      type: string
+      x-extensible-enum:
+        - "ORG_DELEGATE"
+        - "ORG_MANAGER"
+        - "DEVELOPER"
+        - "ADMIN"
+    LegalRepresentative:
+      type: object
+      properties:
+        email:
+          $ref: "#/components/schemas/EmailAddress"
+        family_name:
+          <<: *non-empty-string
+        fiscal_code:
+          $ref: "#/components/schemas/FiscalCode"
+        given_name:
+          <<: *non-empty-string
+        phone_number:
+          <<: *non-empty-string
+      required:
+        - email
+        - family_name
+        - fiscal_code
+        - given_name
+        - phone_number
+      example:
+        {
+          "family_name": "Spano'",
+          "fiscal_code": "BCDFGH12A21Z123D",
+          "given_name": "Ignazio Alfonso",
+          "phone_number": "5550000000",
+          "email": "indirizzo00@email.pec.it"
+        }
+    UpdateUserProfile:
+      type: object
+      properties:
+        work_email:
+          $ref: "#/components/schemas/EmailAddress"
+      required:
+        - work_email
+    UserProfile:
+      type: object
+      properties:
+        email:
+          $ref: "#/components/schemas/EmailAddress"
+        family_name:
+          type: string
+        fiscal_code:
+          $ref: "#/components/schemas/FiscalCode"
+        given_name:
+          type: string
+        role:
+          $ref: "#/components/schemas/UserRole"
+        work_email:
+          $ref: "#/components/schemas/EmailAddress"
+      required:
+        - email
+        - family_name
+        - given_name
+        - fiscal_code
+        - role
+      example:
+        {
+          email: "example@email.com",
+          family_name: "Rossi",
+          fiscal_code: "RSSMRA80A01H501U",
+          given_name: "Mario",
+          role: "ORG_DELEGATE",
+          work_email: "work-email@email.com"
+        }
+    Link:
+      externalDocs:
+        url: https://tools.ietf.org/id/draft-handrews-json-schema-hyperschema-02.html
+        description: HyperSchema internet draft.
+      description: |-
+        As this API wants to drive the consumer in the workflow, we decided to
+        use Link Descriptor Objects defined in the current [json-schema draft](https://json-schema.org/draft/2019-09/links).
+
+        [IANA link relations](https://www.iana.org/assignments/link-relations/link-relations.xhtml)
+        should be used in `rel`.
+      type: object
+      properties:
+        rel:
+          type: string
+        href:
+          type: string
+          format: uri-template
+        title:
+          type: string
+        description:
+          type: string
+        $comment:
+          type: string
+      required:
+        - rel
+        - href
+    Links:
+      type: array
+      items:
+        $ref: '#/components/schemas/Link'
+      example:
+        - rel: self
+          href: https://api.pa-onboarding.dev.io.italia.it/public-administrations/c_e956
+          description: Agency URL
+    AdministrationSearchParam:
+      type: string
+      pattern: ^.{5,}$
+      example: comune gioiosa
+    AdministrationSearchResult:
+      type: object
+      properties:
+        administrations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FoundAdministration'
+      required:
+        - administrations
+    ActionPayload:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: integer
+          minItems: 1
+        type:
+          $ref: '#/components/schemas/RequestAction'
+      required:
+        - ids
+        - type
+      example:
+        {
+          items: [ 1, 2 ],
+          type: "SEND_REGISTRATION_REQUEST_EMAIL_TO_ORG"
+        }
+    FoundAdministration:
+      oneOf:
+        - $ref: '#/components/schemas/FoundNotRegisteredAdministration'
+        - $ref: '#/components/schemas/FoundRegisteredAdministration'
+    FoundNotRegisteredAdministration:
+      type: object
+      properties:
+        fiscal_code:
+          $ref: "#/components/schemas/OrganizationFiscalCode"
+        ipa_code:
+          type: string
+        name:
+          type: string
+        legal_representative:
+          type: object
+          properties:
+            family_name:
+              type: string
+            given_name:
+              type: string
+          required:
+            - family_name
+            - given_name
+        links:
+          $ref: '#/components/schemas/Links'
+        pecs:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/EmailAddress'
+      required:
+        - fiscal_code
+        - ipa_code
+        - name
+        - legal_representative
+        - links
+        - pecs
+      example:
+        {
+          "fiscal_code": "81000930800",
+          "ipa_code": "c_e044",
+          "legal_representative": {
+            "family_name": "ALI'",
+            "given_name": "Gianfranco"
+          },
+          "name": "Comune di Gioiosa Jonica",
+          "pecs": {
+            "1": "indirizzo10@email.pec.it",
+            "2": "indirizzo11@email.pec.it",
+            "3": "indirizzo12@email.pec.it",
+            "4": "indirizzo13@email.pec.it",
+          },
+          "links": [{
+                      "rel": "self",
+                      "href": "https://api.pa-onboarding.dev.io.italia.it/public-administrations/c_e044"
+                    }, {
+                      "rel": "create",
+                      "href": "https://api.pa-onboarding.dev.io.italia.it/organizations"
+                    }]
+        }
+    FoundRegisteredAdministration:
+      type: object
+      properties:
+        fiscal_code:
+          $ref: "#/components/schemas/OrganizationFiscalCode"
+        ipa_code:
+          type: string
+        name:
+          type: string
+        legal_representative:
+          type: object
+          properties:
+            family_name:
+              type: string
+            fiscal_code:
+              $ref: "#/components/schemas/FiscalCode"
+            given_name:
+              type: string
+            phone_number:
+              type: string
+          required:
+            - family_name
+            - fiscal_code
+            - given_name
+            - phone_number
+        links:
+          $ref: '#/components/schemas/Links'
+        pecs:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/EmailAddress'
+        scope:
+          $ref: '#/components/schemas/OrganizationScope'
+        selected_pec_label:
+          type: string
+      required:
+        - fiscal_code
+        - ipa_code
+        - name
+        - legal_representative
+        - links
+        - pecs
+        - scope
+        - selected_pec_label
+      example:
+        {
+          "fiscal_code": "81000930800",
+          "ipa_code": "c_e044",
+          "legal_representative": {
+            "family_name": "ALI'",
+            "given_name": "Gianfranco",
+            "fiscal_code": "BCDFGH12A21Z123F",
+            "phone_number": "3332222222"
+          },
+          "name": "Comune di Gioiosa Jonica",
+          "pecs": {
+            "1": "indirizzo10@email.pec.it",
+            "2": "indirizzo11@email.pec.it",
+            "3": "indirizzo12@email.pec.it",
+            "4": "indirizzo13@email.pec.it",
+          },
+          "scope": "LOCAL",
+          "selected_pec_label": "3",
+          "links": [{
+                      "rel": "self",
+                      "href": "https://api.pa-onboarding.dev.io.italia.it/public-administrations/c_e044"
+                    }]
+        }
+    Organization:
+      type: object
+      properties:
+        fiscal_code:
+          $ref: "#/components/schemas/OrganizationFiscalCode"
+        ipa_code:
+          <<: *non-empty-string
+        legal_representative:
+          $ref: "#/components/schemas/LegalRepresentative"
+        name:
+          <<: *non-empty-string
+        pec:
+          $ref: "#/components/schemas/EmailAddress"
+        scope:
+          $ref: '#/components/schemas/OrganizationScope'
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationDelegate'
+      required:
+        - fiscal_code
+        - ipa_code
+        - legal_representative
+        - name
+        - pec
+        - scope
+      example:
+        {
+          "fiscal_code": "86000470830",
+          "ipa_code": "c_e043",
+          "legal_representative": {
+            "family_name": "Spano'",
+            "given_name": "Ignazio Alfonso",
+            "fiscal_code": "BCDFGH12A21Z123D",
+            "phone_number": "5550000000",
+            "email": "indirizzo00@email.pec.it"
+          },
+          "name": "Comune di Gioiosa Marea",
+          "pec": "indirizzo00@email.pec.it",
+          "scope": "NATIONAL"
+        }
+    OrganizationRegistrationParams:
+      type: object
+      properties:
+        ipa_code:
+          <<: *non-empty-string
+        legal_representative:
+          type: object
+          properties:
+            family_name:
+              <<: *non-empty-string
+            given_name:
+              <<: *non-empty-string
+            fiscal_code:
+              $ref: "#/components/schemas/FiscalCode"
+            phone_number:
+              <<: *non-empty-string
+          required:
+            - family_name
+            - given_name
+            - fiscal_code
+            - phone_number
+        request_type:
+          $ref: "#/components/schemas/RequestType"
+        scope:
+          $ref: '#/components/schemas/OrganizationScope'
+        selected_pec_label:
+          <<: *non-empty-string
+      required:
+        - ipa_code
+        - legal_representative
+        - scope
+        - selected_pec_label
+      example:
+        {
+          "ipa_code": "c_e043",
+          "legal_representative": {
+            "family_name": "Spano'",
+            "given_name": "Ignazio Alfonso",
+            "fiscal_code": "BCDFGH12A21Z123D",
+            "phone_number": "3331111111"
+          },
+          "request_type": "ORGANIZATION_REGISTRATION",
+          "scope": "NATIONAL",
+          "selected_pec_label": "1"
+        }
+    OrganizationCollection:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Organization"
+      required:
+        - items
+    OrganizationDelegate:
+      type: object
+      properties:
+        email:
+          $ref: "#/components/schemas/EmailAddress"
+        family_name:
+          <<: *non-empty-string
+        fiscal_code:
+          $ref: "#/components/schemas/FiscalCode"
+        given_name:
+          <<: *non-empty-string
+        work_email:
+          $ref: "#/components/schemas/EmailAddress"
+      required:
+        - email
+        - family_name
+        - fiscal_code
+        - given_name
+    RequestAction:
+      type: string
+      x-extensible-enum:
+        - "SEND_REGISTRATION_REQUEST_EMAIL_TO_ORG"
+    UserDelegationRequest:
+      type: object
+      properties:
+        organization:
+          $ref: "#/components/schemas/Organization"
+        id:
+          type: integer
+        requester:
+          $ref: "#/components/schemas/OrganizationDelegate"
+        status:
+          $ref: '#/components/schemas/RequestStatus'
+        type:
+          type: string
+          x-extensible-enum:
+            - "USER_DELEGATION"
+      required:
+        - id
+        - organization
+        - requester
+        - status
+        - type
+      example:
+        {
+          id: 12345,
+          organization: {
+            "fiscal_code": "86000470830",
+            "ipa_code": "c_e043",
+            "legal_representative": {
+              "family_name": "Spano'",
+              "given_name": "Ignazio Alfonso",
+              "fiscal_code": "BCDFGH12A21Z123D",
+              "phone_number": "5550000000",
+              "email": "indirizzo00@email.pec.it"
+            },
+            "name": "Comune di Gioiosa Marea",
+            "pec": "indirizzo00@email.pec.it",
+            "scope": "NATIONAL"
+          },
+          requester: {
+            "email": "delegate@example.com",
+            "family_name": "Rossi",
+            "fiscal_code": "RSSMTT77S12A123D",
+            "given_name": "Matteo"
+          },
+          status: "SUBMITTED",
+          type: "USER_DELEGATION"
+        }
+    OrganizationRegistrationRequest:
+      type: object
+      properties:
+        organization:
+          $ref: "#/components/schemas/Organization"
+        id:
+          type: integer
+        requester:
+          $ref: "#/components/schemas/OrganizationDelegate"
+        status:
+          $ref: '#/components/schemas/RequestStatus'
+        type:
+          type: string
+          x-extensible-enum:
+            - "ORGANIZATION_REGISTRATION"
+      required:
+        - id
+        - organization
+        - requester
+        - status
+        - type
+      example:
+        {
+          id: 12345,
+          organization: {
+            "fiscal_code": "86000470830",
+            "ipa_code": "c_e043",
+            "legal_representative": {
+              "family_name": "Spano'",
+              "given_name": "Ignazio Alfonso",
+              "fiscal_code": "BCDFGH12A21Z123D",
+              "phone_number": "5550000000",
+              "email": "indirizzo00@email.pec.it"
+            },
+            "name": "Comune di Gioiosa Marea",
+            "pec": "indirizzo00@email.pec.it",
+            "scope": "NATIONAL"
+          },
+          requester: {
+            "email": "delegate@example.com",
+            "family_name": "Rossi",
+            "fiscal_code": "RSSMTT77S12A123D",
+            "given_name": "Matteo"
+          },
+          status: "SUBMITTED",
+          type: "ORGANIZATION_REGISTRATION"
+        }
+    Request:
+      oneOf:
+        - $ref: "#/components/schemas/OrganizationRegistrationRequest"
+        - $ref: "#/components/schemas/UserDelegationRequest"
+      discriminator:
+        propertyName: type
+  securitySchemes:
+    bearerAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+    tokenQueryAuth:
+      type: apiKey
+      name: access_token
+      in: query
