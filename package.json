@@ -1,8 +1,8 @@
 {
-  "name": "io-functions-template",
-  "description": "",
-  "author": "IO team",
-  "repository": "https://github.com/pagoPA/io-functions-template",
+  "name": "io-functions-onboarding",
+  "description": "IO onboarding portal API for public administrations",
+  "author": "https://pagopa.gov.it",
+  "repository": "https://github.com/pagopa/io-functions-onboarding",
   "version": "0.1.0",
   "license": "MIT",
   "scripts": {
