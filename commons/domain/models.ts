@@ -22,6 +22,7 @@ export interface IEmailAttachmentStatus {
 
 export interface IAttachmentStatus {
   status: AttachmentStatus;
+  // tslint:disable-next-line: no-any
   signers?: any;
   operation: string;
 }
