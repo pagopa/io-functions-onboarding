@@ -12,6 +12,8 @@
     "start": "func start",
     "predev": "npm-run-all generate build",
     "dev": "npm-run-all --parallel start watch",
+    "preprepare-db": "yarn build",
+    "prepare-db": "node src/database/prepare.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "lint": "tslint -p .",

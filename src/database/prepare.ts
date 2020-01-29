@@ -18,7 +18,7 @@ usync
   .migrate({
     SequelizeImport: Sequelize,
     logging: (param: string) => log.info("%s", param),
-    migrationsDir: path.join("dist", "migrations"),
+    migrationsDir: path.join("src", "migrations"),
     sequelize
   })
   .catch(error => {
