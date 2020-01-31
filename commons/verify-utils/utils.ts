@@ -6,6 +6,7 @@ import * as Imap from "imap-simple";
 import { fetchOptions, imapOption, searchCriteria } from "../domain/data";
 import { IEmailAttachmentStatus } from "../domain/models";
 import * as ImapFunctions from "../imap/imapFunctions";
+import { log } from "../utils/logger";
 import * as ArubaVerify from "../verify-sign/wsaruba";
 
 // TODO move to some utils
@@ -36,9 +37,7 @@ const mergeSameEmails = (emails: readonly IEmailAttachmentStatus[]) => {
 
 // Algorithm for connecting to imap server query for messages
 // download attachments and verify signatures.
-export const verifyAllAttachments = (
-  context: Context
-): TaskEither<
+export const verifyAllAttachments = (): TaskEither<
   Error,
   Task<readonly IEmailAttachmentStatus[]>
   // Connect to imap server
@@ -68,7 +67,7 @@ export const verifyAllAttachments = (
             // close imap server
             imap.end();
             // TODO deepen into log here seems not to work.
-            context.log(emailsStatus);
+            log.info(emailsStatus);
             // merge mails with same id resembling email + attachments
             return mergeSameEmails(emailsStatus);
           })

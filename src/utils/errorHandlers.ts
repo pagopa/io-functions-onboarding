@@ -1,7 +1,7 @@
 import { Errors } from "io-ts";
 import { errorsToReadableMessages } from "italia-ts-commons/lib/reporters";
 import { ResponseErrorInternal } from "italia-ts-commons/lib/responses";
-import { log } from "./logger";
+import { log } from "../../commons/utils/logger";
 
 export const genericInternalUnknownErrorHandler = (
   error: unknown,

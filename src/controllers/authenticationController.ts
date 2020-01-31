@@ -17,12 +17,12 @@ import {
 } from "italia-ts-commons/lib/responses";
 import { UrlFromString } from "italia-ts-commons/lib/url";
 
+import { getRequiredEnvVar } from "../../commons/utils/environment";
+import { log } from "../../commons/utils/logger";
 import SessionStorage from "../services/sessionStorage";
 import TokenService from "../services/tokenService";
 import { SessionToken } from "../types/token";
 import { validateSpidUser, withUserFromRequest } from "../types/user";
-import { getRequiredEnvVar } from "../utils/environment";
-import { log } from "../utils/logger";
 import {
   IResponseNoContent,
   ResponseNoContent,

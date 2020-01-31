@@ -1,4 +1,4 @@
-import { getRequiredEnvVar } from "./utils/environment";
+import { getRequiredEnvVar } from "../commons/utils/environment";
 
 // Endpoint to retrieve the public administrations from IPA
 export const INDICEPA_URL = getRequiredEnvVar("INDICEPA_ADMINISTRATIONS_URL");

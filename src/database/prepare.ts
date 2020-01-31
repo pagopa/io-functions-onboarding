@@ -7,8 +7,8 @@ dotenv.config();
 import * as path from "path";
 import { Sequelize } from "sequelize";
 import * as usync from "umzug-sync";
+import { log } from "../../commons/utils/logger";
 import { populateIpaPublicAdministrationTable } from "../services/ipaPublicAdministrationService";
-import { log } from "../utils/logger";
 import sequelize from "./db";
 
 /**

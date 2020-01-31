@@ -16,8 +16,8 @@ import {
   NonEmptyString
 } from "italia-ts-commons/lib/strings";
 
+import { log } from "../../commons/utils/logger";
 import { UserRole } from "../generated/UserRole";
-import { log } from "../utils/logger";
 import { withValidatedOrValidationError } from "../utils/responses";
 
 import { NotClosedSession } from "./session";

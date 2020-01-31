@@ -16,7 +16,7 @@ jest.mock("../utils", () => {
 
 describe("Connect to imap (email) server and verify attachments signature", () => {
   it("should return emails and attachments status", async () => {
-    const verifyAll = await U.verifyAllAttachments({} as Context).run();
+    const verifyAll = await U.verifyAllAttachments().run();
     expect(verifyAll.isRight()).toBeTruthy();
   });
 });

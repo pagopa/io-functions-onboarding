@@ -15,10 +15,10 @@ import {
 } from "italia-ts-commons/lib/responses";
 import { EmailString } from "italia-ts-commons/lib/strings";
 
+import { log } from "../../commons/utils/logger";
 import { UserProfile } from "../generated/UserProfile";
 import { User } from "../models/User";
 import { LoggedUser } from "../types/user";
-import { log } from "../utils/logger";
 import { withValidatedOrInternalError } from "../utils/responses";
 
 export default class ProfileService {

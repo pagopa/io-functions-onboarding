@@ -1,3 +1,4 @@
+import { toError } from "fp-ts/lib/Either";
 import { TaskEither, tryCatch } from "fp-ts/lib/TaskEither";
 import { FetchOptions } from "imap";
 import * as Imap from "imap-simple";
@@ -12,20 +13,14 @@ export const imap = (
   connect: ImapConnect,
   imapOptions: Imap.ImapSimpleOptions
 ) => {
-  return tryCatch(
-    () => connect(imapOptions),
-    reason => new Error(String(reason))
-  );
+  return tryCatch(() => connect(imapOptions), toError);
 };
 
 // Open the INBOX
 export const openInbox = (
   imapServer: Imap.ImapSimple
 ): TaskEither<Error, string> => {
-  return tryCatch(
-    () => imapServer.openBox("INBOX"),
-    reason => new Error(String(reason))
-  );
+  return tryCatch(() => imapServer.openBox("INBOX"), toError);
 };
 
 // Query for email messages
@@ -36,10 +31,7 @@ export const searchMails = (
   fOptions: FetchOptions
   // tslint:disable-next-line: readonly-array
 ): TaskEither<Error, Imap.Message[]> => {
-  return tryCatch(
-    () => imapServer.search([...criteria], fOptions),
-    reason => new Error(String(reason))
-  );
+  return tryCatch(() => imapServer.search([...criteria], fOptions), toError);
 };
 
 // Extract an attachment file
@@ -71,7 +63,7 @@ export const extractAttachment = (
             };
           })[0];
       }),
-    reason => new Error(String(reason))
+    toError
   );
 };
 
