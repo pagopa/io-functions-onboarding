@@ -1,16 +1,15 @@
 import * as winston from "winston";
 
 import { Context } from "@azure/functions";
+import createAzureFunctionHandler from "@pagopa/io-functions-express/dist/src/createAzureFunctionsHandler";
 import { secureExpressApp } from "io-functions-commons/dist/src/utils/express";
 import { AzureContextTransport } from "io-functions-commons/dist/src/utils/logging";
 import { setAppContext } from "io-functions-commons/dist/src/utils/middlewares/context_middleware";
-import createAzureFunctionHandler from "io-functions-express/dist/src/createAzureFunctionsHandler";
 
 import * as soap from "soap";
 import newApp from "../src/app";
 import EmailService from "../src/services/emailService";
 import { getRequiredEnvVar } from "../src/utils/environment";
-import { log } from "../src/utils/logger";
 
 // tslint:disable-next-line: no-let
 let logger: Context["log"] | undefined;
@@ -18,9 +17,6 @@ const contextTransport = new AzureContextTransport(() => logger, {
   level: "debug"
 });
 winston.add(contextTransport);
-
-// tslint:disable-next-line: no-console
-console.log("************** init func");
 
 const emailService = new EmailService(
   {
@@ -37,27 +33,29 @@ const emailService = new EmailService(
   }
 );
 
+const init = Promise.all([
+  soap.createClientAsync(getRequiredEnvVar("ARSS_WSDL_URL")),
+  emailService.verifyTransport()
+]).then(([arssClient]) =>
+  newApp(emailService, arssClient).then(app => {
+    secureExpressApp(app);
+    return {
+      app,
+      // tslint:disable-next-line: no-any
+      azureFunctionHandler: createAzureFunctionHandler(app)
+    };
+  })
+);
+
 // Binds the express app to an Azure Function handler
 function httpStart(context: Context): void {
   logger = context.log;
-  Promise.all([
-    soap.createClientAsync(getRequiredEnvVar("ARSS_WSDL_URL")),
-    emailService.verifyTransport()
-  ])
-    .then(results => {
-      const [arssClient] = results;
-      return newApp(emailService, arssClient)
-        .then(app => {
-          secureExpressApp(app);
-          setAppContext(app, context);
-          createAzureFunctionHandler(app)(context);
-        })
-        .catch(error => log.error("Error loading app: %s", error));
+  init
+    .then(({ app, azureFunctionHandler }) => {
+      setAppContext(app, context);
+      azureFunctionHandler(context);
     })
-    .catch(error => {
-      log.error("Error on app init. %s", error);
-      process.exit(1);
-    });
+    .catch(context.log);
 }
 
 export default httpStart;
