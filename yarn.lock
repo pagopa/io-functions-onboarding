@@ -461,6 +461,11 @@
   dependencies:
     "@types/node" ">= 8"
 
+"@pagopa/io-functions-express@^1.0.0":
+  version "1.0.1"
+  resolved "https://npm.pkg.github.com/download/@pagopa/io-functions-express/1.0.1/f065e0b4e70f6507b7bd8df021ece909893d2139820c922ff4e84af207e460d0#6c0f3b93c5c4dd33a308a99ac95abb51400b9afd"
+  integrity sha512-2pKzTWqPB0ZY4ZB6E5ZSditz5P+ud6QSsXDRWgaK+ULqzZmGpVd1gT5ErRYZnp6Yyo9Vx0R+KLi7siJl/SmjvQ==
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
@@ -4347,7 +4352,7 @@ io-functions-commons@^1.3.0:
     unified "^7.1.0"
     winston "^3.1.0"
 
-io-functions-express@^0.1.0, io-functions-express@^0.1.1:
+io-functions-express@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/io-functions-express/-/io-functions-express-0.1.1.tgz#6ae954fe89ec1d797c5e5d10eca5e77f08ff4a4d"
   integrity sha512-Co7sovRyB0lxgU6NFh5v72Apude3XbgKQtqA7slryvKoEqLAvlnLU7DtsYVoF62O3ZJdtSHYf9JWuhDc/di1mg==

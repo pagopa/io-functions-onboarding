@@ -1,0 +1,24 @@
+version: "3.2"
+
+services:
+  # IO PA Onboarding - backend
+  backend:
+    container_name: backend
+    image: teamdigitale/io-onboarding-pa-api
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    working_dir: /usr/src/app
+    command: ["yarn", "dev"]
+    env_file:
+      - .env
+    restart: always
+    volumes:
+      - .:/usr/src/app
+      - documentvol:/documents
+      - "./certs:/usr/src/app/certs:delegated"
+    depends_on:
+      - database
+      - spid-testenv2
+    networks:
+      - io-onboarding
