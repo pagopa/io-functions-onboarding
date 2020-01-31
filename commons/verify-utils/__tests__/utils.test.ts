@@ -9,7 +9,7 @@ jest.mock("../utils", () => {
   return {
     __esModule: true,
     ...originalIndex,
-    verifyAllAttachments: (context: Context) =>
+    verifyAllAttachments: (_: Context) =>
       taskEither.of(task.of(emailAttachmentsWithStatusMock))
   };
 });

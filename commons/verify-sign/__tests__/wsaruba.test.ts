@@ -1,6 +1,4 @@
-import { right } from "fp-ts/lib/Either";
 import { task } from "fp-ts/lib/Task";
-import * as soap from "soap";
 import {
   emailAttachmentsMock,
   emailAttachmentsWithStatusMock
@@ -14,7 +12,7 @@ jest.mock("../../verify-sign/wsaruba", () => {
   return {
     __esModule: true,
     ...originalWsAruba,
-    verify: jest.fn((email: IEmailAttachmentStatus) =>
+    verify: jest.fn((_: IEmailAttachmentStatus) =>
       task.of(emailAttachmentsWithStatusMock)
     )
   };
@@ -25,7 +23,7 @@ jest.mock("soap", () => {
   return {
     __esModule: true,
     ...originalSoapModule,
-    createClientAsync: jest.fn((urlWsd: string) => Promise.resolve({}))
+    createClientAsync: jest.fn((_: string) => Promise.resolve({}))
   };
 });
 

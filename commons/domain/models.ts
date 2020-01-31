@@ -1,5 +1,3 @@
-import * as t from "io-ts";
-
 export interface IMessageAttachment {
   // tslint:disable-next-line: no-any
   data: any;
@@ -26,18 +24,3 @@ export interface IAttachmentStatus {
   signers?: any;
   operation: string;
 }
-
-// I would like to learn how to use t
-const TestMessage = t.type({
-  receiver: t.string,
-  sender: t.string
-});
-
-// tslint:disable-next-line: no-commented-code
-/*
-const IMessageAttachmet = t.interface({
-  data: t.any,
-  filename: t.string,
-  message: t.string
-});
-*/

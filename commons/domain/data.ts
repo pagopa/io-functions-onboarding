@@ -1,29 +1,28 @@
 import { Config, FetchOptions } from "imap";
 import * as Imap from "imap-simple";
+import { log } from "../../commons/utils/logger";
 import { getRequiredEnvVar } from "../utils/environment";
 
 const config: Config = {
-  user: getRequiredEnvVar("IMAP_MAIL"),
-  // tslint:disable-next-line: object-literal-sort-keys
-  password: getRequiredEnvVar("IMAP_PASSWORD"),
+  authTimeout: 3000,
   host: getRequiredEnvVar("IMAP_HOST"),
+  password: getRequiredEnvVar("IMAP_PASSWORD"),
   port: Number(getRequiredEnvVar("IMAP_PORT")),
   tls: true,
-  authTimeout: 3000
+  user: getRequiredEnvVar("IMAP_MAIL")
 };
 
 export const imapOption: Imap.ImapSimpleOptions = {
   imap: config,
-  // tslint:disable-next-line: no-console
-  onmail: (num: number) => console.log(num.toString)
+  onmail: (num: number) => log.info("Received %s messages", num)
 };
 
-// tslint:disable-next-line: readonly-array
-export const searchCriteria: string[] = ["UNSEEN"]; // ["ALL"]
+// ALL or UNSEEN
+export const searchCriteria: readonly string[] = ["UNSEEN"];
 
 export const fetchOptions: FetchOptions = {
   bodies: ["HEADER", "TEXT"],
-  markSeen: true, // false,
+  markSeen: true,
   struct: true
 };
 

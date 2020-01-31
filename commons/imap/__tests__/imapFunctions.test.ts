@@ -37,19 +37,19 @@ jest.mock("../../imap/imapFunctions", () => {
   return {
     __esModule: true,
     ...originalImapFunctions,
-    openInbox: jest.fn((imapServer: ImapSimpleModule.ImapSimple) =>
+    openInbox: jest.fn((_: ImapSimpleModule.ImapSimple) =>
       taskEither.of("INBOX")
     ),
     searchMails: jest.fn((
-      imapServer: ImapSimpleModule.ImapSimple,
+      _: ImapSimpleModule.ImapSimple,
       // tslint:disable-next-line: no-any
-      criteria: ReadonlyArray<any>,
-      fOptions: Imap.FetchOptions
+      __: ReadonlyArray<any>,
+      ___: Imap.FetchOptions
     ) => taskEither.of([{} as ImapSimpleModule.Message]))
   };
 });
 
-const connectMock = jest.fn((options: ImapSimpleModule.ImapSimpleOptions) => {
+const connectMock = jest.fn((_: ImapSimpleModule.ImapSimpleOptions) => {
   return Promise.resolve({} as ImapSimple);
 });
 
