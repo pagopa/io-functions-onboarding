@@ -24,7 +24,7 @@ executors:
   docker-nodejs:
     # environment:
     docker:
-      - image: circleci/node:10.14.1
+      - image: circleci/node:10.18.1
 
 commands:
   install_node_modules:
