@@ -1,7 +1,10 @@
 import { Context } from "@azure/functions";
 import { task } from "fp-ts/lib/Task";
 import { taskEither } from "fp-ts/lib/TaskEither";
-import { emailAttachmentsWithStatusMock } from "../../../__mocks__/mocks";
+import {
+  emailAttachmentsWithStatusMock,
+  imapOptionMock
+} from "../../../__mocks__/mocks";
 import * as U from "../utils";
 
 jest.mock("../utils", () => {
@@ -16,7 +19,7 @@ jest.mock("../utils", () => {
 
 describe("Connect to imap (email) server and verify attachments signature", () => {
   it("should return emails and attachments status", async () => {
-    const verifyAll = await U.verifyAllAttachments().run();
+    const verifyAll = await U.verifyAllAttachments(imapOptionMock).run();
     expect(verifyAll.isRight()).toBeTruthy();
   });
 });

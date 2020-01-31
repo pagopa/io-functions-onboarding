@@ -1,21 +1,4 @@
-import { Config, FetchOptions } from "imap";
-import * as Imap from "imap-simple";
-import { log } from "../../commons/utils/logger";
-import { getRequiredEnvVar } from "../utils/environment";
-
-const config: Config = {
-  authTimeout: 3000,
-  host: getRequiredEnvVar("IMAP_HOST"),
-  password: getRequiredEnvVar("IMAP_PASSWORD"),
-  port: Number(getRequiredEnvVar("IMAP_PORT")),
-  tls: true,
-  user: getRequiredEnvVar("IMAP_MAIL")
-};
-
-export const imapOption: Imap.ImapSimpleOptions = {
-  imap: config,
-  onmail: (num: number) => log.info("Received %s messages", num)
-};
+import { FetchOptions } from "imap";
 
 // ALL or UNSEEN
 export const searchCriteria: readonly string[] = ["UNSEEN"];

@@ -10,20 +10,28 @@
  */
 
 import { AzureFunction, Context } from "@azure/functions";
+import { Config } from "imap";
+import * as Imap from "imap-simple";
+import { log } from "../commons/utils/logger";
 import * as U from "../commons/verify-utils/utils";
 
-const verifyAttachments = () =>
-  U.verifyAllAttachments().map(taskEmails => taskEmails.run());
+const verifyAttachments = (imapOption: Imap.ImapSimpleOptions) =>
+  U.verifyAllAttachments(imapOption).map(taskEmails => taskEmails.run());
 
-async function Main(): Promise<void> {
-  await verifyAttachments().run();
+async function Main(config: Config): Promise<void> {
+  const imapOption: Imap.ImapSimpleOptions = {
+    imap: config,
+    onmail: (num: number) => log.info("Received %s messages", num)
+  };
+  await verifyAttachments(imapOption).run();
 }
 
 const verifyAttachmentsActivity: AzureFunction = async (
   context: Context
 ): Promise<void> => {
   context.log("start activity");
-  return await Main();
+  const config = context.bindings.config;
+  return await Main(config);
 };
 
 export default verifyAttachmentsActivity;

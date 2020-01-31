@@ -13,7 +13,8 @@ import * as df from "durable-functions";
 
 // tslint:disable-next-line: typedef
 const orchestrator = df.orchestrator(function*(context) {
-  return yield context.df.callActivity("VerifyAttachmentsActivity");
+  const config = context.df.getInput();
+  return yield context.df.callActivity("VerifyAttachmentsActivity", config);
 });
 
 export default orchestrator;
