@@ -1,0 +1,4 @@
+lint:
+  codeframes: on
+  rules:
+    operation-2xx-response: off
