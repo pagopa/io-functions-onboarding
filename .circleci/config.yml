@@ -50,7 +50,9 @@ commands:
     steps:
       - run:
           name: Install ghostscript
-          command: apt-get update && apt install -y ghostscript
+          command: |
+            sudo apt-get update
+            sudo apt install -y ghostscript
 
 jobs:
   compile:
