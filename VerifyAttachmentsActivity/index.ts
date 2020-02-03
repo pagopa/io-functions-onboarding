@@ -12,8 +12,18 @@
 import { AzureFunction, Context } from "@azure/functions";
 import { Config } from "imap";
 import * as Imap from "imap-simple";
+import { getRequiredEnvVar } from "../commons/utils/environment";
 import { log } from "../commons/utils/logger";
 import * as U from "../commons/verify-utils/utils";
+
+const configuration: Config = {
+  authTimeout: 3000,
+  host: getRequiredEnvVar("IMAP_HOST"),
+  password: getRequiredEnvVar("IMAP_PASSWORD"),
+  port: Number(getRequiredEnvVar("IMAP_PORT")),
+  tls: true,
+  user: getRequiredEnvVar("IMAP_MAIL")
+};
 
 const verifyAttachments = (imapOption: Imap.ImapSimpleOptions) =>
   U.verifyAllAttachments(imapOption).map(taskEmails => taskEmails.run());
@@ -30,8 +40,7 @@ const verifyAttachmentsActivity: AzureFunction = async (
   context: Context
 ): Promise<void> => {
   context.log("start activity");
-  const config = context.bindings.config;
-  return await Main(config);
+  return await Main(configuration);
 };
 
 export default verifyAttachmentsActivity;

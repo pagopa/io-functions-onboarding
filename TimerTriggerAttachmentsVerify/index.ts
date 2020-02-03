@@ -11,20 +11,13 @@ const timerTrigger: AzureFunction = async (
   const timeStamp = new Date().toISOString();
   const client = df.getClient(context);
 
-  const config: Config = {
-    authTimeout: 3000,
-    host: getRequiredEnvVar("IMAP_HOST"),
-    password: getRequiredEnvVar("IMAP_PASSWORD"),
-    port: Number(getRequiredEnvVar("IMAP_PORT")),
-    tls: true,
-    user: getRequiredEnvVar("IMAP_MAIL")
-  };
-
-  // It resolves a problem at start time.
+  // It resolves a random problem at start time:
+  // the timer trigger did not start sometimes due
+  // to some indeterministic behaviour.
   // Wait untill the environment is fully loaded
   if (myTimer.IsPastDue) {
     // help at start time
-    context.log("Environment not already ready wait ...");
+    context.log("Environment not ready yet, wait ...");
   }
 
   // name of the orchestrator
@@ -33,7 +26,7 @@ const timerTrigger: AzureFunction = async (
   context.log(
     `Started timer for launching verify orchestrator with ID = '${instanceId}'.`
   );
-  await client.startNew(functionName, instanceId, config);
+  await client.startNew(functionName, instanceId);
   context.log("Timer verify function ran!", timeStamp);
 };
 
