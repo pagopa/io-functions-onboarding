@@ -86,7 +86,7 @@ jobs:
     executor: docker-nodejs
     steps:
       - checkout
-      - run: yarn add oval
+      - install_node_modules
       - run: yarn oval validate -p openapi/index.yaml
 
   danger:
