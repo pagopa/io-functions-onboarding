@@ -1,4 +1,4 @@
-import { getRequiredEnvVar } from "../utils/environment";
+import { getRequiredEnvVar } from "../../commons/utils/environment";
 
 export const config = {
   database: getRequiredEnvVar("POSTGRESQL_DATABASE"),

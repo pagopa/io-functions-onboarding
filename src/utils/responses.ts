@@ -8,7 +8,7 @@ import {
   ResponseErrorInternal,
   ResponseErrorValidation
 } from "italia-ts-commons/lib/responses";
-import { log } from "./logger";
+import { log } from "../../commons/utils/logger";
 
 /**
  * Interface for a successful creation response returning a json object (201 HTTP status).

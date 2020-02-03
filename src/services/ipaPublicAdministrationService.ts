@@ -1,6 +1,7 @@
 import { createStream } from "csv-stream";
 import * as es from "event-stream";
 import fetch from "node-fetch";
+import { log } from "../../commons/utils/logger";
 import { INDICEPA_URL } from "../config";
 import {
   init as initIpaPublicAdministration,
@@ -10,7 +11,6 @@ import {
   IIpaPublicAdministrationRaw,
   IpaPublicAdministration
 } from "../types/PublicAdministration";
-import { log } from "../utils/logger";
 
 /**
  * Upserts the public administrations from IPA and deletes the outdated ones.

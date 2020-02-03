@@ -9,10 +9,10 @@ import { EmailString } from "italia-ts-commons/lib/strings";
 import EmailService from "../services/emailService";
 import ProfileService from "../services/profileService";
 
+import { log } from "../../commons/utils/logger";
 import { UserProfile } from "../generated/UserProfile";
 import localeIt from "../locales/it";
 import { withUserFromRequest } from "../types/user";
-import { log } from "../utils/logger";
 import { withValidatedOrValidationError } from "../utils/responses";
 
 export default class ProfileController {

@@ -1,10 +1,10 @@
 import { schedule } from "node-cron";
 import * as soap from "soap";
+import { getRequiredEnvVar } from "../commons/utils/environment";
+import { log } from "../commons/utils/logger";
 import newApp from "./app";
 import EmailService from "./services/emailService";
 import { upsertFromIpa } from "./services/ipaPublicAdministrationService";
-import { getRequiredEnvVar } from "./utils/environment";
-import { log } from "./utils/logger";
 
 const emailService = new EmailService(
   {

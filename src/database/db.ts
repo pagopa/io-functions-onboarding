@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import { log } from "../utils/logger";
+import { log } from "../../commons/utils/logger";
 import { config } from "./config";
 
 const sequelize = new Sequelize(

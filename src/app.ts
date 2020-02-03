@@ -12,6 +12,7 @@ import {
 import * as passport from "passport";
 import * as soap from "soap";
 
+import { log } from "../commons/utils/logger";
 import { init as initIpaPublicAdministration } from "./models/IpaPublicAdministration";
 import {
   createAssociations as createOrganizationAssociations,
@@ -30,8 +31,8 @@ import {
   createAssociations as createUserAssociations,
   init as initUser
 } from "./models/User";
-import { log } from "./utils/logger";
 
+import { getRequiredEnvVar } from "../commons/utils/environment";
 import AuthenticationController from "./controllers/authenticationController";
 import ProfileController from "./controllers/profileController";
 import RequestController from "./controllers/requestController";
@@ -41,7 +42,6 @@ import ProfileService from "./services/profileService";
 import SessionStorage from "./services/sessionStorage";
 import TokenService from "./services/tokenService";
 import bearerTokenStrategy from "./strategies/bearerTokenStrategy";
-import { getRequiredEnvVar } from "./utils/environment";
 import { toExpressHandler, toFunctionalExpressHandler } from "./utils/express";
 
 // Private key used in SAML authentication to a SPID IDP.

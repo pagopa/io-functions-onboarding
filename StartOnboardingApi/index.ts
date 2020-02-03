@@ -7,9 +7,9 @@ import { AzureContextTransport } from "io-functions-commons/dist/src/utils/loggi
 import { setAppContext } from "io-functions-commons/dist/src/utils/middlewares/context_middleware";
 
 import * as soap from "soap";
+import { getRequiredEnvVar } from "../commons/utils/environment";
 import newApp from "../src/app";
 import EmailService from "../src/services/emailService";
-import { getRequiredEnvVar } from "../src/utils/environment";
 
 // tslint:disable-next-line: no-let
 let logger: Context["log"] | undefined;

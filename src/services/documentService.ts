@@ -6,7 +6,7 @@ import * as fs from "fs";
 import * as PdfDocument from "pdfkit";
 import * as soap from "soap";
 import * as tmp from "tmp";
-import { getRequiredEnvVar } from "../utils/environment";
+import { getRequiredEnvVar } from "../../commons/utils/environment";
 
 export default class DocumentService {
   constructor(private arssClient: soap.Client) {}

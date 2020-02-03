@@ -24,6 +24,7 @@ import {
   ResponseErrorValidation,
   ResponseSuccessJson
 } from "italia-ts-commons/lib/responses";
+import { log } from "../../commons/utils/logger";
 import accessControl, { Resource } from "../acl/acl";
 import { ActionPayload } from "../generated/ActionPayload";
 import { AdministrationSearchParam } from "../generated/AdministrationSearchParam";
@@ -55,7 +56,6 @@ import {
   genericInternalUnknownErrorHandler,
   genericInternalValidationErrorsHandler
 } from "../utils/errorHandlers";
-import { log } from "../utils/logger";
 import {
   IResponseDownload,
   IResponseNoContent,
