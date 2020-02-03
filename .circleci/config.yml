@@ -46,6 +46,11 @@ commands:
           paths:
             - ~/.cache/yarn
           key: v1-dependencies-{{ checksum "yarn.lock" }}
+  install_ghostscript:
+    steps:
+      - run:
+          name: Install ghostscript
+          command: apt-get update && apt install -y ghostscript
 
 jobs:
   compile:
@@ -63,6 +68,7 @@ jobs:
     steps:
       - checkout
       - install_node_modules
+      - install_ghostscript
       - run: yarn generate
       - run: yarn test
       - run: "bash <(curl -s https://codecov.io/bash)"
