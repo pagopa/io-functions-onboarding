@@ -34,10 +34,10 @@ commands:
             - v1-dependencies-{{ checksum "yarn.lock" }}
 
       - run:
-        name: Add .npmrc
-        command: |
-            echo "@pagopa:registry=https://npm.pkg.github.com/" > ~/.npmrc
-            echo "//npm.pkg.github.com/:_authToken=\"$GITHUB_TOKEN\"" >> ~/.npmrc
+          name: Add .npmrc
+          command: |
+              echo "@pagopa:registry=https://npm.pkg.github.com/" > ~/.npmrc
+              echo "//npm.pkg.github.com/:_authToken=\"$GITHUB_TOKEN\"" >> ~/.npmrc
 
       - run: yarn install --cache-folder ~/.cache/yarn --frozen-lockfile --no-progress --non-interactive
   save_node_cache:
