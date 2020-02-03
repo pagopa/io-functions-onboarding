@@ -1,5 +1,7 @@
 import { AzureFunction, Context } from "@azure/functions";
 import * as df from "durable-functions";
+import { Config } from "imap";
+import { getRequiredEnvVar } from "../commons/utils/environment";
 
 const timerTrigger: AzureFunction = async (
   context: Context,
@@ -9,9 +11,13 @@ const timerTrigger: AzureFunction = async (
   const timeStamp = new Date().toISOString();
   const client = df.getClient(context);
 
+  // It resolves a random problem at start time:
+  // the timer trigger did not start sometimes due
+  // to some indeterministic behaviour.
+  // Wait untill the environment is fully loaded
   if (myTimer.IsPastDue) {
     // help at start time
-    context.log("Timer function is running late!");
+    context.log("Environment not ready yet, wait ...");
   }
 
   // name of the orchestrator

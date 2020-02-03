@@ -1,9 +1,8 @@
-import { Context } from "@azure/functions";
 import { array } from "fp-ts/lib/Array";
 import { task, Task } from "fp-ts/lib/Task";
 import { taskEither, TaskEither } from "fp-ts/lib/TaskEither";
 import * as Imap from "imap-simple";
-import { fetchOptions, imapOption, searchCriteria } from "../domain/data";
+import { fetchOptions, searchCriteria } from "../domain/data";
 import { IEmailAttachmentStatus } from "../domain/models";
 import * as ImapFunctions from "../imap/imapFunctions";
 import { log } from "../utils/logger";
@@ -37,7 +36,9 @@ const mergeSameEmails = (emails: readonly IEmailAttachmentStatus[]) => {
 
 // Algorithm for connecting to imap server query for messages
 // download attachments and verify signatures.
-export const verifyAllAttachments = (): TaskEither<
+export const verifyAllAttachments = (
+  imapOption: Imap.ImapSimpleOptions
+): TaskEither<
   Error,
   Task<readonly IEmailAttachmentStatus[]>
   // Connect to imap server

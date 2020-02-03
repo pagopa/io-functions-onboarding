@@ -1,3 +1,5 @@
+import { Config } from "imap";
+import { ImapSimpleOptions } from "imap-simple";
 import { IEmailAttachmentStatus } from "../commons/domain/models";
 
 export const emailAttachmentsMock = {
@@ -14,6 +16,20 @@ export const emailAttachmentsMock = {
   subject: ["Registrazione presso la piattaforma IO"],
   to: ["example@mail.com"]
 } as IEmailAttachmentStatus;
+
+const imapConfig = {
+  authTimeout: 3000,
+  host: "localhost",
+  // tslint:disable-next-line: no-hardcoded-credentials
+  password: "isittreal",
+  port: 111,
+  tls: true,
+  user: "pippo@pluto.com"
+} as Config;
+
+export const imapOptionMock = {
+  imap: imapConfig
+} as ImapSimpleOptions;
 
 export const emailAttachmentsWithStatusMock = {
   ...emailAttachmentsMock,
