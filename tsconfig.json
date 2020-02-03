@@ -11,9 +11,9 @@
     "lib": ["dom"]
   },
   "exclude": [
-    "__mocks__",
     "dist",
     "node_modules",
-    "src/**/__tests__/*"
+    "**/__tests__/*",
+    "**/__mocks__/*",
   ]
 }

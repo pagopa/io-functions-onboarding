@@ -29,9 +29,9 @@ externalDocs:
   url: https://io.italia.it
   description: IO Project website
 servers:
-  - url: https://api.pa-onboarding.dev.io.italia.it/
+  - url: https://api.pa-onboarding.dev.io.italia.it
     description: Development environment
-  - url: https://api.pa-onboarding.io.italia.it/
+  - url: https://api.pa-onboarding.io.italia.it
     description: Production environment
 x-commons:
   # This section contains yaml anchors useful to implement common behaviors
@@ -67,7 +67,7 @@ paths:
           description: |-
             **IdP ID**.
             The id of the SPID IdP to perform the login through.
-            *Note: Also a fake IdP with id `xx_tedsstenv2` is available.*
+            *Note: Also a fake IdP with id `xx_testenv2` is available.*
           schema:
             type: string
             x-extensible-enum: ["lepidaid", "infocertid", "sielteid", "namirialid", "timid", "arubaid", "posteid", "intesaid", "spiditalia", "xx_testenv2"]

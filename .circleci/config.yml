@@ -32,6 +32,13 @@ commands:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "yarn.lock" }}
+
+      - run:
+          name: Add .npmrc
+          command: |
+              echo "@pagopa:registry=https://npm.pkg.github.com/" > ~/.npmrc
+              echo "//npm.pkg.github.com/:_authToken=\"$GITHUB_TOKEN\"" >> ~/.npmrc
+
       - run: yarn install --cache-folder ~/.cache/yarn --frozen-lockfile --no-progress --non-interactive
   save_node_cache:
     steps:
@@ -39,6 +46,13 @@ commands:
           paths:
             - ~/.cache/yarn
           key: v1-dependencies-{{ checksum "yarn.lock" }}
+  install_ghostscript:
+    steps:
+      - run:
+          name: Install ghostscript
+          command: |
+            sudo apt-get update
+            sudo apt install -y ghostscript
 
 jobs:
   compile:
@@ -56,6 +70,7 @@ jobs:
     steps:
       - checkout
       - install_node_modules
+      - install_ghostscript
       - run: yarn generate
       - run: yarn test
       - run: "bash <(curl -s https://codecov.io/bash)"
@@ -71,8 +86,7 @@ jobs:
     executor: docker-nodejs
     steps:
       - checkout
-      - run: yarn add oval
-      - run: yarn oval validate -p openapi/index.yaml
+      - run: npx @redocly/openapi-cli validate openapi/index.yaml
 
   danger:
     executor: docker-nodejs

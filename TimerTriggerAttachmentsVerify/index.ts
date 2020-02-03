@@ -1,7 +1,5 @@
 import { AzureFunction, Context } from "@azure/functions";
 import * as df from "durable-functions";
-import { Config } from "imap";
-import { getRequiredEnvVar } from "../commons/utils/environment";
 
 const timerTrigger: AzureFunction = async (
   context: Context,
