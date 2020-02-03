@@ -4,7 +4,7 @@ import { taskEither } from "fp-ts/lib/TaskEither";
 import {
   emailAttachmentsWithStatusMock,
   imapOptionMock
-} from "../../../__mocks__/mocks";
+} from "../../../src/__mocks__/mocks";
 import * as U from "../utils";
 
 jest.mock("../utils", () => {

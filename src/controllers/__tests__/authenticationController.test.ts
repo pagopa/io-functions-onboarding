@@ -8,6 +8,7 @@ import {
   NonEmptyString
 } from "italia-ts-commons/lib/strings";
 
+import { getRequiredEnvVar } from "../../../commons/utils/environment";
 import mockReq from "../../__mocks__/mockRequest";
 import mockRes from "../../__mocks__/mockResponse";
 import { UserRoleEnum } from "../../generated/UserRole";
@@ -15,7 +16,6 @@ import SessionStorage from "../../services/sessionStorage";
 import TokenService from "../../services/tokenService";
 import { SessionToken } from "../../types/token";
 import { LoggedUser, validateSpidUser } from "../../types/user";
-import { getRequiredEnvVar } from "../../utils/environment";
 import AuthenticationController from "../authenticationController";
 
 import * as dotenv from "dotenv";

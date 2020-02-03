@@ -1,6 +1,6 @@
 import { Config } from "imap";
 import { ImapSimpleOptions } from "imap-simple";
-import { IEmailAttachmentStatus } from "../commons/domain/models";
+import { IEmailAttachmentStatus } from "../../commons/domain/models";
 
 export const emailAttachmentsMock = {
   attachments: [

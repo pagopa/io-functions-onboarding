@@ -2,7 +2,7 @@ import { task } from "fp-ts/lib/Task";
 import {
   emailAttachmentsMock,
   emailAttachmentsWithStatusMock
-} from "../../../__mocks__/mocks";
+} from "../../../src/__mocks__/mocks";
 import { urlDemoAruba } from "../../domain/data";
 import { IEmailAttachmentStatus } from "../../domain/models";
 import * as ArubaVerify from "../wsaruba";
