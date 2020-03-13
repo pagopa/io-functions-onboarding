@@ -1,8 +1,8 @@
 import * as t from "io-ts";
 import { EmailString, FiscalCode } from "italia-ts-commons/lib/strings";
 import * as SequelizeMock from "sequelize-mock";
-import { UserProfile } from "../../generated/UserProfile";
-import { UserRoleEnum } from "../../generated/UserRole";
+import { UserProfile } from "../../generated/onboarding/UserProfile";
+import { UserRoleEnum } from "../../generated/onboarding/UserRole";
 import { NotClosedSession } from "../../types/session";
 import { LoggedUser } from "../../types/user";
 

@@ -1,7 +1,7 @@
 import { DataTypes, QueryInterface } from "sequelize";
-import { OrganizationScopeEnum } from "../generated/OrganizationScope";
-import { RequestStatusEnum } from "../generated/RequestStatus";
-import { UserRoleEnum } from "../generated/UserRole";
+import { OrganizationScopeEnum } from "../generated/onboarding/OrganizationScope";
+import { RequestStatusEnum } from "../generated/onboarding/RequestStatus";
+import { UserRoleEnum } from "../generated/onboarding/UserRole";
 import { RequestType } from "../models/Request";
 
 export function up(queryInterface: QueryInterface): Promise<unknown> {

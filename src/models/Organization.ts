@@ -5,7 +5,7 @@ import {
   Model
 } from "sequelize";
 import sequelize from "../database/db";
-import { OrganizationScope } from "../generated/OrganizationScope";
+import { OrganizationScope } from "../generated/onboarding/OrganizationScope";
 import { OrganizationUser } from "./OrganizationUser";
 import { User } from "./User";
 

@@ -17,7 +17,7 @@ import {
 } from "italia-ts-commons/lib/strings";
 
 import { log } from "../../commons/utils/logger";
-import { UserRole } from "../generated/UserRole";
+import { UserRole } from "../generated/onboarding/UserRole";
 import { withValidatedOrValidationError } from "../utils/responses";
 
 import { NotClosedSession } from "./session";

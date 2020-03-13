@@ -26,17 +26,17 @@ import {
 } from "italia-ts-commons/lib/responses";
 import { log } from "../../commons/utils/logger";
 import accessControl, { Resource } from "../acl/acl";
-import { ActionPayload } from "../generated/ActionPayload";
-import { AdministrationSearchParam } from "../generated/AdministrationSearchParam";
-import { AdministrationSearchResult } from "../generated/AdministrationSearchResult";
-import { OrganizationCollection } from "../generated/OrganizationCollection";
-import { OrganizationRegistrationParams } from "../generated/OrganizationRegistrationParams";
-import { OrganizationRegistrationRequest } from "../generated/OrganizationRegistrationRequest";
-import { Request } from "../generated/Request";
-import { RequestActionEnum } from "../generated/RequestAction";
-import { RequestStatusEnum } from "../generated/RequestStatus";
-import { UserDelegationRequest } from "../generated/UserDelegationRequest";
-import { UserRoleEnum } from "../generated/UserRole";
+import { ActionPayload } from "../generated/onboarding/ActionPayload";
+import { AdministrationSearchParam } from "../generated/onboarding/AdministrationSearchParam";
+import { AdministrationSearchResult } from "../generated/onboarding/AdministrationSearchResult";
+import { OrganizationCollection } from "../generated/onboarding/OrganizationCollection";
+import { OrganizationRegistrationParams } from "../generated/onboarding/OrganizationRegistrationParams";
+import { OrganizationRegistrationRequest } from "../generated/onboarding/OrganizationRegistrationRequest";
+import { Request } from "../generated/onboarding/Request";
+import { RequestActionEnum } from "../generated/onboarding/RequestAction";
+import { RequestStatusEnum } from "../generated/onboarding/RequestStatus";
+import { UserDelegationRequest } from "../generated/onboarding/UserDelegationRequest";
+import { UserRoleEnum } from "../generated/onboarding/UserRole";
 import localeIt from "../locales/it";
 import {
   Request as RequestModel,

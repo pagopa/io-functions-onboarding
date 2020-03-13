@@ -1,7 +1,7 @@
 import { Either, left, right } from "fp-ts/lib/Either";
 import { none, Option, some } from "fp-ts/lib/Option";
 import { Op } from "sequelize";
-import { UserRoleEnum } from "../generated/UserRole";
+import { UserRoleEnum } from "../generated/onboarding/UserRole";
 import { Session } from "../models/Session";
 import { User } from "../models/User";
 import { SessionToken } from "../types/token";

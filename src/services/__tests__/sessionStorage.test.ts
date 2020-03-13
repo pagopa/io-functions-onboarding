@@ -2,7 +2,7 @@ import { isNone, isSome } from "fp-ts/lib/Option";
 import { SpidLevelEnum } from "io-spid-commons";
 import { EmailString, FiscalCode } from "italia-ts-commons/lib/strings";
 import * as SequelizeMock from "sequelize-mock";
-import { UserRoleEnum } from "../../generated/UserRole";
+import { UserRoleEnum } from "../../generated/onboarding/UserRole";
 import { SessionToken } from "../../types/token";
 import { LoggedUser, SpidUser } from "../../types/user";
 import TokenService from "../tokenService";

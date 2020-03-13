@@ -10,7 +10,7 @@ import EmailService from "../services/emailService";
 import ProfileService from "../services/profileService";
 
 import { log } from "../../commons/utils/logger";
-import { UserProfile } from "../generated/UserProfile";
+import { UserProfile } from "../generated/onboarding/UserProfile";
 import localeIt from "../locales/it";
 import { withUserFromRequest } from "../types/user";
 import { withValidatedOrValidationError } from "../utils/responses";
