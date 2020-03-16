@@ -60,3 +60,4 @@ generated
 azure-functions-core-tools
 
 .DS_Store
+.npmrc
