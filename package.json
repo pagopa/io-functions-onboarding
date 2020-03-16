@@ -22,7 +22,7 @@
     "dist:modules": "modclean -r -n default:safe && npm prune --production",
     "dist:zip": "zip -r dist.zip . --exclude @.funcignore --exclude .funcignore",
     "predeploy": "npm-run-all generate build dist:*",
-    "generate:api-models": "shx rm -rf src/generated/api && mkdir -p src/generated/api && gen-api-models --api-spec https://raw.githubusercontent.com/pagopa/io-functions-admin/0ca7d65a4b08fa22f9f2a3f2be71fd663985ce66/openapi/index.yaml --out-dir src/generated/api --no-strict --request-types --response-decoders",
+    "generate:api-models": "shx rm -rf src/generated/api && mkdir -p src/generated/api && gen-api-models --api-spec https://raw.githubusercontent.com/pagopa/io-functions-admin/master/openapi/index.yaml --out-dir src/generated/api --no-strict --request-types --response-decoders",
     "generate:onboarding-models": "shx rm -rf src/generated/onboarding && mkdir -p src/generated/onboarding && gen-api-models --api-spec ./openapi/index.yaml --out-dir src/generated/onboarding --no-strict --request-types --response-decoders",
     "generate": "npm-run-all generate:*"
   },
