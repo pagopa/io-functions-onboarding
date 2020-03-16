@@ -1,5 +1,5 @@
 import { AccessControl } from "accesscontrol";
-import { UserRoleEnum } from "../generated/UserRole";
+import { UserRoleEnum } from "../generated/onboarding/UserRole";
 
 export enum Resource {
   ADMINISTRATION = "administration",

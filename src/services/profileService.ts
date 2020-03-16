@@ -16,7 +16,7 @@ import {
 import { EmailString } from "italia-ts-commons/lib/strings";
 
 import { log } from "../../commons/utils/logger";
-import { UserProfile } from "../generated/UserProfile";
+import { UserProfile } from "../generated/onboarding/UserProfile";
 import { User } from "../models/User";
 import { LoggedUser } from "../types/user";
 import { withValidatedOrInternalError } from "../utils/responses";

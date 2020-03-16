@@ -11,7 +11,7 @@ import {
 import { getRequiredEnvVar } from "../../../commons/utils/environment";
 import mockReq from "../../__mocks__/mockRequest";
 import mockRes from "../../__mocks__/mockResponse";
-import { UserRoleEnum } from "../../generated/UserRole";
+import { UserRoleEnum } from "../../generated/onboarding/UserRole";
 import SessionStorage from "../../services/sessionStorage";
 import TokenService from "../../services/tokenService";
 import { SessionToken } from "../../types/token";

@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../database/db";
-import { OrganizationScopeEnum } from "../generated/OrganizationScope";
-import { RequestStatusEnum } from "../generated/RequestStatus";
+import { OrganizationScopeEnum } from "../generated/onboarding/OrganizationScope";
+import { RequestStatusEnum } from "../generated/onboarding/RequestStatus";
 import { User } from "./User";
 
 export enum RequestType {

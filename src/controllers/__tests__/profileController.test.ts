@@ -11,8 +11,8 @@ import {
   NonEmptyString
 } from "italia-ts-commons/lib/strings";
 import mockReq from "../../__mocks__/mockRequest";
-import { UserProfile } from "../../generated/UserProfile";
-import { UserRoleEnum } from "../../generated/UserRole";
+import { UserProfile } from "../../generated/onboarding/UserProfile";
+import { UserRoleEnum } from "../../generated/onboarding/UserRole";
 import EmailService from "../../services/emailService";
 import ProfileService from "../../services/profileService";
 import { SessionToken } from "../../types/token";

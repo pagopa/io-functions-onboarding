@@ -6,7 +6,7 @@ import {
 } from "italia-ts-commons/lib/strings";
 import mockReq from "../../__mocks__/mockRequest";
 
-import { UserRoleEnum } from "../../generated/UserRole";
+import { UserRoleEnum } from "../../generated/onboarding/UserRole";
 import { SessionToken } from "../token";
 import { LoggedUser, SpidUser, validateSpidUser } from "../user";
 

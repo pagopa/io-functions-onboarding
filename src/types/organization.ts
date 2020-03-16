@@ -1,10 +1,10 @@
 import { Either } from "fp-ts/lib/Either";
 import { Errors } from "io-ts";
 import { errorsToReadableMessages } from "italia-ts-commons/lib/reporters";
-import { FoundNotRegisteredAdministration } from "../generated/FoundNotRegisteredAdministration";
-import { FoundRegisteredAdministration } from "../generated/FoundRegisteredAdministration";
-import { Organization as OrganizationResult } from "../generated/Organization";
-import { UserRoleEnum } from "../generated/UserRole";
+import { FoundNotRegisteredAdministration } from "../generated/onboarding/FoundNotRegisteredAdministration";
+import { FoundRegisteredAdministration } from "../generated/onboarding/FoundRegisteredAdministration";
+import { Organization as OrganizationResult } from "../generated/onboarding/Organization";
+import { UserRoleEnum } from "../generated/onboarding/UserRole";
 import { Organization as OrganizationModel } from "../models/Organization";
 import { IIpaPublicAdministrationRaw } from "./PublicAdministration";
 

@@ -2,12 +2,12 @@ import { isLeft, isRight, right } from "fp-ts/lib/Either";
 import { isNone, isSome, some } from "fp-ts/lib/Option";
 import { NonEmptyString } from "italia-ts-commons/lib/strings";
 import { Sequelize } from "sequelize";
-import { FiscalCode } from "../../generated/FiscalCode";
-import { OrganizationRegistrationParams } from "../../generated/OrganizationRegistrationParams";
-import { OrganizationScopeEnum } from "../../generated/OrganizationScope";
-import { RequestStatusEnum } from "../../generated/RequestStatus";
-import { RequestTypeEnum } from "../../generated/RequestType";
-import { UserRoleEnum } from "../../generated/UserRole";
+import { FiscalCode } from "../../generated/onboarding/FiscalCode";
+import { OrganizationRegistrationParams } from "../../generated/onboarding/OrganizationRegistrationParams";
+import { OrganizationScopeEnum } from "../../generated/onboarding/OrganizationScope";
+import { RequestStatusEnum } from "../../generated/onboarding/RequestStatus";
+import { RequestTypeEnum } from "../../generated/onboarding/RequestType";
+import { UserRoleEnum } from "../../generated/onboarding/UserRole";
 import {
   createOnboardingRequest,
   getAllOrganizations,
