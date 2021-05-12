@@ -89,7 +89,7 @@
     "moment": "^2.24.0",
     "node-cron": "^2.0.3",
     "node-fetch": "^2.6.0",
-    "nodemailer": "^6.3.1",
+    "nodemailer": "^6.4.16",
     "passport": "^0.4.0",
     "passport-http-bearer": "^1.0.1",
     "pdfkit": "^0.10.0",
